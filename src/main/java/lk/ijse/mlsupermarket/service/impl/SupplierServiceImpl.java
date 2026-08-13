@@ -1,6 +1,7 @@
 package lk.ijse.mlsupermarket.service.impl;
 
 import lk.ijse.mlsupermarket.dto.SupplierDTO;
+import lk.ijse.mlsupermarket.entity.ProductSupplier;
 import lk.ijse.mlsupermarket.entity.Supplier;
 import lk.ijse.mlsupermarket.repository.ProductSupplierRepository;
 import lk.ijse.mlsupermarket.repository.SupplierRepository;
@@ -83,16 +84,60 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public SupplierDTO getSupplierById(long supplierId) {
-        return null;
+
+        log.info("Execute getSupplierById()");
+
+        try {
+
+            Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);
+
+            if (optionalSupplier.isEmpty()) {
+                throw new RuntimeException("Sorry, related supplier is not found");
+            }
+
+            Supplier s = optionalSupplier.get();
+            return new SupplierDTO(s.getSupplierId(), s.getSupplierName(), s.getContact(), s.getEmail(), s.getAddress());
+
+        } catch (Exception e) {
+            log.error("Error in getSupplierById()" );
+            throw e;
+        }
     }
 
     @Override
     public List<SupplierDTO> searchSuppliersByName(String supplierName) {
-        return List.of();
+
+        log.info("Execute searchSuppliersByName() ");
+
+        try {
+            return supplierRepository.searchSuppliersByName(supplierName);
+
+        } catch (Exception e) {
+            log.error("Error in searchSuppliersByName() ");
+            throw e;
+        }
     }
 
     @Override
     public void deleteSupplier(long supplierId) {
 
+        log.info("Execute deleteSupplier()");
+        try {
+            Optional<Supplier> optionalSupplier = supplierRepository.findById(supplierId);
+            if (optionalSupplier.isEmpty()) {
+                throw new RuntimeException("Sorry, related supplier is not found");
+            }
+
+            List<ProductSupplier> linkedRecords = productSupplierRepository.findBySupplier_SupplierId(supplierId);
+            if (!linkedRecords.isEmpty()) {
+                throw new RuntimeException("Sorry, cannot delete supplier — it is still linked to " + linkedRecords.size() + " product(s)");
+            }
+
+            supplierRepository.deleteById(supplierId);
+
+        } catch (Exception e) {
+            log.error("Error in deleteSupplier() : " + e.getMessage());
+            throw e;
+        }
     }
 }
