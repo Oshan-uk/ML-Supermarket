@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierDTO {
-    private Long supplierId;
-    private String supplierName;
-    private String contact;
-    private String email;
-    private String address;
+public class InventoryDTO {
+    private Long inventoryId;
+    private Long productId;
+    private Integer quantity;
+    private Integer reorderLevel;
+
 }
