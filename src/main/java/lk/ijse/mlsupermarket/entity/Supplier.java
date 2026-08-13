@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Supplier {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long supplierID;
+    private Long supplierId;
     private String supplierName;
     private String contact;
     private String email;
