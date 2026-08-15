@@ -1,6 +1,5 @@
 package lk.ijse.mlsupermarket.service.impl;
 
-import jakarta.validation.Valid;
 import lk.ijse.mlsupermarket.dto.UserDTO;
 import lk.ijse.mlsupermarket.entity.User;
 import lk.ijse.mlsupermarket.repository.UserRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
         log.info("Executes getUserById()");
 
         try{
-            Optional optionalUser = userRepository.findById(userId);
+            Optional<User> optionalUser = userRepository.findById(userId);
             if (optionalUser.isEmpty()) throw new RuntimeException("Sorry, Related User NOT Found!");
 
             User user = new User();
