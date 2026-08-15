@@ -20,7 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository, CategoryService categoryService){
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ProductRepository productRepository){
         this.categoryRepository= categoryRepository;
         this.productRepository = productRepository;
     }
