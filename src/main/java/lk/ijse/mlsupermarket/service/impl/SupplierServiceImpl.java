@@ -9,6 +9,7 @@ import lk.ijse.mlsupermarket.service.SupplierService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,16 +71,32 @@ public class SupplierServiceImpl implements SupplierService {
         }
 
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////
+
     @Override
     public List<SupplierDTO> getAllSuppliers() {
         log.info("Execute getAllSuppliers()");
 
         try {
-        }catch (Exception e){
+            List<Supplier> suppliers = supplierRepository.findAll();
+            List<SupplierDTO> supplierDTOList = new ArrayList<>();
+
+            for (Supplier supplier : suppliers) {
+                SupplierDTO supplierDTO = new SupplierDTO(
+                        supplier.getSupplierId(),
+                        supplier.getSupplierName(),
+                        supplier.getContact(),
+                        supplier.getEmail(),
+                        supplier.getAddress()
+                );
+
+                supplierDTOList.add(supplierDTO);
+            }
+            return supplierDTOList;
+
+        } catch (Exception e) {
+            log.error("Error in getAllSuppliers()", e);
             throw e;
         }
-        return null;
     }
 
     @Override
