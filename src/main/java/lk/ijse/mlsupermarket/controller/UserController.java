@@ -35,7 +35,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse getAllUsers(){
         List<UserDTO> users = userService.getAllUsers();
-        return new CommonResponse(ResponseCode.OPERATION_SUCCESS, ResponseMessage.SUCCESS_MESSAGE);
+        return new CommonResponse(ResponseCode.OPERATION_SUCCESS,users, ResponseMessage.SUCCESS_MESSAGE);
     }
 
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
