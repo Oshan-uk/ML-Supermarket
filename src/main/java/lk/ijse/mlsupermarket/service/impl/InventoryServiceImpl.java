@@ -11,8 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -70,15 +72,27 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<StockLevelDTO> getAllStockLevels() {
         log.info("Execute getAllStockLevels()");
-        try{
-            /////////////////////////////////////////////////////////
-                              /* Do this Later */
-            ////////////////////////////////////////////////////////
+
+        try {
+            List<Inventory> inventories = inventoryRepository.findAll();
+            List<StockLevelDTO> stockLevelDTOList = new ArrayList<>();
+
+            for (Inventory inventory : inventories) {
+                StockLevelDTO stockLevelDTO = new StockLevelDTO(
+                        inventory.getProduct().getProductId(),
+                        inventory.getProduct().getProductName(),
+                        inventory.getQuantity()
+                );
+
+                stockLevelDTOList.add(stockLevelDTO);
+            }
+
+            return stockLevelDTOList;
+
         } catch (Exception e) {
-            log.error("Error in getAllStockLevels()");
-            throw new RuntimeException(e);
+            log.error("Error in getAllStockLevels()", e);
+            throw e;
         }
-        return null;
     }
 
     @Override
@@ -105,14 +119,31 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<InventoryDTO> getLowStockItems() {
         log.info("Execute getLowStockItems()");
-        try{
-            /////////////////////////////////////////////////////////
-                              /* Do this Later */
-            ////////////////////////////////////////////////////////
+
+        try {
+            List<Inventory> inventories = inventoryRepository.findAll();
+            List<InventoryDTO> inventoryDTOList = new ArrayList<>();
+
+            for (Inventory inventory : inventories) {
+
+                if (inventory.getQuantity() <= inventory.getReorderLevel()) {
+
+                    InventoryDTO inventoryDTO = new InventoryDTO(
+                            inventory.getInventoryId(),
+                            inventory.getProduct().getProductId(),
+                            inventory.getQuantity(),
+                            inventory.getReorderLevel()
+                    );
+
+                    inventoryDTOList.add(inventoryDTO);
+                }
+            }
+
+            return inventoryDTOList;
+
         } catch (Exception e) {
-            log.error("Error in getLowStockItems()");
-            throw new RuntimeException(e);
+            log.error("Error in getLowStockItems()", e);
+            throw e;
         }
-        return List.of();
     }
 }
