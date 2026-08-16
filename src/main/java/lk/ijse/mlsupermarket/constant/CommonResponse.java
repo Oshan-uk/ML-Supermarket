@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class CommonResponse {
     private int status;
@@ -14,6 +13,12 @@ public class CommonResponse {
 
     public CommonResponse(int status, String message) {
         this.status = status;
+        this.message = message;
+    }
+
+    public CommonResponse(int status, Object body, String message) {
+        this.status = status;
+        this.body = body;
         this.message = message;
     }
 }
