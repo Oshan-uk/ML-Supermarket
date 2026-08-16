@@ -7,6 +7,7 @@ import lk.ijse.mlsupermarket.service.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,15 +58,29 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDTO> getAllCustomers() {
         log.info("Execute getAllCustomers()");
+
         try {
+            List<Customer> customers = customerRepository.findAll();
+            List<CustomerDTO> customerDTOList = new ArrayList<>();
+
+            for (Customer customer : customers) {
+                CustomerDTO customerDTO = new CustomerDTO(
+                        customer.getCustomerId(),
+                        customer.getCustomerName(),
+                        customer.getContact(),
+                        customer.getEmail()
+                );
+
+                customerDTOList.add(customerDTO);
+            }
+
+            return customerDTOList;
 
         } catch (Exception e) {
-            log.error("Error in getAllCustomers() ");
+            log.error("Error in getAllCustomers()", e);
             throw e;
         }
-        return null;
     }
-
     @Override
     public CustomerDTO getCustomerById(long customerId) {
         log.info("Execute getCustomerById()");
