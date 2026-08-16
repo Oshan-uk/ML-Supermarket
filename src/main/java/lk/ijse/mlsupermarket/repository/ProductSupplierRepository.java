@@ -13,5 +13,6 @@ import java.util.List;
 public interface ProductSupplierRepository extends JpaRepository<ProductSupplier, Long> {
 
     List<ProductSupplier> findBySupplier_SupplierId(Long supplierId);
+    List<ProductSupplier> findByProduct_ProductId(Long productId);
 
 }
