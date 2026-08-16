@@ -158,6 +158,7 @@ public class ProductServiceImpl implements ProductService {
 
             productRepository.save(product);
         } catch (Exception e) {
+            log.error("Error in changeProductStatus()");
             throw e;
         }
     }

@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
             Optional<User> optionalUser = userRepository.findById(userId);
             if (optionalUser.isEmpty()) throw new RuntimeException("Sorry, Related User NOT Found!");
 
-            User user = new User();
+            User user = optionalUser.get();
             return new UserDTO(
                     user.getUserId(),
                     user.getUserName(),

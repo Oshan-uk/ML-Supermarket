@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse getUserById(@PathVariable long userId){
         UserDTO user = userService.getUserById(userId);
-        return new CommonResponse(ResponseCode.OPERATION_SUCCESS, ResponseMessage.SUCCESS_MESSAGE);
+        return new CommonResponse(ResponseCode.OPERATION_SUCCESS,user, ResponseMessage.SUCCESS_MESSAGE);
     }
 
     @PatchMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
