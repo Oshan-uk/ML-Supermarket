@@ -13,6 +13,7 @@ import lk.ijse.mlsupermarket.status.MovementType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,24 +76,58 @@ public class StockMovementServiceImpl implements StockMovementService {
     @Override
     public List<StockMovementDTO> getAllMovements() {
         log.info("Execute getAllMovements()");
+
         try {
+            List<StockMovement> movements = stockMovementRepository.findAll();
+            List<StockMovementDTO> stockMovementDTOList = new ArrayList<>();
+
+            for (StockMovement movement : movements) {
+                StockMovementDTO stockMovementDTO = new StockMovementDTO(
+                        movement.getMovementId(),
+                        movement.getProduct().getProductId(),
+                        movement.getMovementType(),
+                        movement.getQuantity(),
+                        movement.getMovementDate(),
+                        movement.getReason()
+                );
+
+                stockMovementDTOList.add(stockMovementDTO);
+            }
+
+            return stockMovementDTOList;
 
         } catch (Exception e) {
-            log.error("Error in getAllMovements()");
+            log.error("Error in getAllMovements()", e);
             throw e;
         }
-        return null;
     }
 
     @Override
     public List<StockMovementDTO> getMovementsByProduct(long productId) {
-        log.info("Execute getMovementsByProduct()");
+        log.info("Execute getMovementsByProduct() productId {}", productId);
+
         try {
+            List<StockMovement> movements = stockMovementRepository.findByProduct_productId(productId);
+            List<StockMovementDTO> stockMovementDTOList = new ArrayList<>();
+
+            for (StockMovement movement : movements) {
+                StockMovementDTO stockMovementDTO = new StockMovementDTO(
+                        movement.getMovementId(),
+                        movement.getProduct().getProductId(),
+                        movement.getMovementType(),
+                        movement.getQuantity(),
+                        movement.getMovementDate(),
+                        movement.getReason()
+                );
+
+                stockMovementDTOList.add(stockMovementDTO);
+            }
+
+            return stockMovementDTOList;
 
         } catch (Exception e) {
-            log.error("Error in getMovementsByProduct()");
+            log.error("Error in getMovementsByProduct()", e);
             throw e;
         }
-        return  null;
     }
 }
