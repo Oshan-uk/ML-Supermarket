@@ -51,12 +51,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResponse filterProducts(
-            @RequestParam(required = false) String categoryName,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) ProductStatus status
-    ) {
+    public CommonResponse filterProducts(@RequestParam(required = false) String categoryName, @RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) ProductStatus status) {
         List<ProductDTO> products = productService.filterProducts(categoryName, minPrice, maxPrice, status);
         return new CommonResponse(ResponseCode.OPERATION_SUCCESS, products, ResponseMessage.SUCCESS_MESSAGE);
     }
