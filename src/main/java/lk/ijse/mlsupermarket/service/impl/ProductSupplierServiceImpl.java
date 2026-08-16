@@ -11,6 +11,7 @@ import lk.ijse.mlsupermarket.service.ProductSupplierService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,29 +70,55 @@ public class ProductSupplierServiceImpl implements ProductSupplierService {
     @Override
     public List<ProductSupplierDTO> getAllProductSuppliers() {
         log.info("Execute getAllProductSuppliers()");
+
         try {
-            /////////////////////////////////////////////////////////
-                                /* Do this Later */
-            ////////////////////////////////////////////////////////
+            List<ProductSupplier> productSuppliers = productSupplierRepository.findAll();
+            List<ProductSupplierDTO> productSupplierDTOList = new ArrayList<>();
+
+            for (ProductSupplier productSupplier : productSuppliers) {
+                ProductSupplierDTO productSupplierDTO = new ProductSupplierDTO(
+                        productSupplier.getProductSupplierId(),
+                        productSupplier.getProduct().getProductId(),
+                        productSupplier.getSupplier().getSupplierId(),
+                        productSupplier.getCostPrice()
+                );
+
+                productSupplierDTOList.add(productSupplierDTO);
+            }
+
+            return productSupplierDTOList;
+
         } catch (Exception e) {
-            log.error("Error in getAllProductSuppliers()");
+            log.error("Error in getAllProductSuppliers()", e);
             throw e;
         }
-        return null;
     }
 
     @Override
     public List<ProductSupplierDTO> getSuppliersByProduct(long productId) {
-        log.info("Execute getSuppliersByProduct()");
+        log.info("Execute getSuppliersByProduct() productId {}", productId);
+
         try {
-            /////////////////////////////////////////////////////////
-                                /* Do this Later */
-            ////////////////////////////////////////////////////////
+            List<ProductSupplier> productSuppliers = productSupplierRepository.findByProduct_ProductId(productId);
+            List<ProductSupplierDTO> productSupplierDTOList = new ArrayList<>();
+
+            for (ProductSupplier productSupplier : productSuppliers) {
+                ProductSupplierDTO productSupplierDTO = new ProductSupplierDTO(
+                        productSupplier.getProductSupplierId(),
+                        productSupplier.getProduct().getProductId(),
+                        productSupplier.getSupplier().getSupplierId(),
+                        productSupplier.getCostPrice()
+                );
+
+                productSupplierDTOList.add(productSupplierDTO);
+            }
+
+            return productSupplierDTOList;
+
         } catch (Exception e) {
-            log.error("Error in getSuppliersByProduct()");
+            log.error("Error in getSuppliersByProduct()", e);
             throw e;
         }
-        return null;
     }
 
     @Override
