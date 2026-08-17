@@ -96,7 +96,7 @@ public class ProductSupplierServiceImpl implements ProductSupplierService {
 
     @Override
     public List<ProductSupplierDTO> getSuppliersByProduct(long productId) {
-        log.info("Execute getSuppliersByProduct() productId {}", productId);
+        log.info("Execute getSuppliersByProduct()", productId);
 
         try {
             List<ProductSupplier> productSuppliers = productSupplierRepository.findByProduct_ProductId(productId);
