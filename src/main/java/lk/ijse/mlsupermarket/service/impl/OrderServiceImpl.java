@@ -152,15 +152,23 @@ public class OrderServiceImpl implements OrderService {
             if(orderProcess == OrderProcess.CONTINUE){
                 orders.setOrderStatus(OrderStatus.COMPLETED);
             } else if (orderProcess == OrderProcess.CANCEL) {
-                orders.setOrderStatus(OrderStatus.CANCELLED);
+                log.info("CANCELLING...");
 
+                orders.setOrderStatus(OrderStatus.CANCELLED);
                 List<OrderItem> items = orderItemRepository.findByOrder_OrderId(orderId);
 
-                for(OrderItem item : items){
-                    Optional<Inventory> optionalInventory = inventoryRepository.findByProduct_ProductId(item.getProduct().getProductId());
-                    if(optionalInventory.isPresent()){
+
+
+                for (OrderItem item : items) {
+                    long productId = item.getProduct().getProductId();
+
+                    Optional<Inventory> optionalInventory = inventoryRepository.findByProduct_ProductId(productId);
+
+                    if (optionalInventory.isPresent()) {
                         Inventory inventory = optionalInventory.get();
                         inventory.setQuantity(inventory.getQuantity() + item.getQuantity());
+
+                        log.info("Inventory AFTER restore: {}", inventory.getQuantity());
 
                         inventoryRepository.save(inventory);
 
@@ -169,15 +177,17 @@ public class OrderServiceImpl implements OrderService {
                         movement.setMovementType(MovementType.IN);
                         movement.setQuantity(item.getQuantity());
                         movement.setMovementDate(LocalDate.now());
-                        movement.setReason("Order #" + orderId + " cancelled - STORE RESTORED");
+                        movement.setReason("Order #" + orderId + " cancelled - STOCK RESTORED");
 
                         stockMovementRepository.save(movement);
+
+                    } else {
+                        log.error("Inventory NOT FOUND for Product ID: {}", productId);
                     }
                 }
-
-            } else throw new RuntimeException("Sorry, Invalid Order Process!!!");
-
+            }else throw new RuntimeException("Sorry, Invalid Order Process!!!");
             orderRepository.save(orders);
+
         } catch (Exception e) {
             log.error("Error in processOrder()");
             throw e;
@@ -193,6 +203,22 @@ public class OrderServiceImpl implements OrderService {
             List<OrderDTO> orderDTOList = new ArrayList<>();
 
             for (Orders order : orders) {
+                List<OrderItemDTO> orderItemDTOList = new ArrayList<>();
+                List<OrderItem> orderItems =orderItemRepository.findByOrder_OrderId(order.getOrderId());
+
+                for (OrderItem orderItem : orderItems) {
+                    OrderItemDTO orderItemDTO = new OrderItemDTO(
+                            orderItem.getOrderItemId(),
+                            order.getOrderId(),
+                            orderItem.getProduct().getProductId(),
+                            orderItem.getQuantity(),
+                            orderItem.getUnitPrice(),
+                            orderItem.getSubtotal()
+                    );
+
+                    orderItemDTOList.add(orderItemDTO);
+                }
+
                 OrderDTO orderDTO = new OrderDTO(
                         order.getOrderId(),
                         order.getOrderDate(),
@@ -201,10 +227,12 @@ public class OrderServiceImpl implements OrderService {
                         order.getOrderStatus(),
                         order.getCustomer().getCustomerId(),
                         order.getUser().getUserId(),
-                        null
+                        orderItemDTOList
                 );
+
                 orderDTOList.add(orderDTO);
             }
+
             return orderDTOList;
 
         } catch (Exception e) {
