@@ -34,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
             Optional<Orders> optionalOrders = orderRepository.findById(paymentDTO.getOrderId());
             if(optionalOrders.isEmpty()) throw new RuntimeException("Sorry, related order is not found!");
 
-            Optional<Payment> optionalPayment = paymentRepository.findByOrder_OrderID(paymentDTO.getOrderId());
+            Optional<Payment> optionalPayment = paymentRepository.findByOrder_OrderId(paymentDTO.getOrderId());
             if(optionalPayment.isPresent()) throw  new RuntimeException("Sorry, Payment Already Existing!");
 
             Payment payment = new Payment();
@@ -83,7 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("Execute getPaymentByOrderId()");
 
         try{
-            Optional<Payment> optionalPayment = paymentRepository.findByOrder_OrderID(orderId);
+            Optional<Payment> optionalPayment = paymentRepository.findByOrder_OrderId(orderId);
             if(optionalPayment.isEmpty()) throw new RuntimeException("Sorry, No payment Found for this Order!");
 
             Payment payment = optionalPayment.get();

@@ -7,7 +7,9 @@ import lk.ijse.mlsupermarket.dto.response.UserDataDTO;
 import lk.ijse.mlsupermarket.entity.User;
 import lk.ijse.mlsupermarket.repository.UserRepository;
 import lk.ijse.mlsupermarket.security.JwtUtil;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResponse login(@RequestBody AuthDTO authDTO){
         Optional<User> optionalUser = userRepository.findByUserName(authDTO.getUserName());
         if(optionalUser.isEmpty()) throw new RuntimeException("Sorry invalid username or password!");
